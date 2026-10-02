@@ -16,7 +16,6 @@ router.post("/files", async (req, res) => {
 
   WriteFileStream.on("finish", async ()=>{
     const infsToRegister = fileHandler(req)
-    console.log(infsToRegister)
     await db.query("INSERT INTO files(id, user_id, file_name, mime_type, size, path) VALUES ($1, $2, $3, $4, $5, $6)", [infsToRegister.id, infsToRegister.user_id, infsToRegister.file_name, infsToRegister.content_type, infsToRegister.content_length, infsToRegister.path])
     return res.json({
       msg: "File successfully received!",
