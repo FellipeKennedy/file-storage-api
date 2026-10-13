@@ -5,8 +5,8 @@ const fileHandler = (request)=>{
   let user_name = null
   let user_id = null
   let file_name = null
-  let content_type = null
-  let content_length = null
+  let mime_type = null
+  let size = null
   let path = null
   let fileInfsObject = {}
 
@@ -15,8 +15,8 @@ const fileHandler = (request)=>{
     user_name = request.get("x-user-name")
     user_id = request.get("x-user-id")
     file_name = request.get("x-file-name")
-    content_type = request.get("content-type")
-    content_length = request.get("content-length")
+    mime_type = request.get("content-type")
+    size = request.get("content-length")
     path = `/cloud/${user_name}/${file_name}`
 
     return fileInfsObject = {
@@ -24,8 +24,8 @@ const fileHandler = (request)=>{
       user_name: user_name,
       user_id: user_id,
       file_name: file_name,
-      content_type: content_type,
-      content_length: Number(content_length),
+      mime_type: mime_type,
+      size: Number(size),
       path: path
     }
   } catch (err){
