@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 // configurations
 const app = e()
 app.use(e.json())
+app.use(e.raw({type: "*/*", limit: "50mb"}))
 app.use(cookieParser())
 app.use(routes)
 

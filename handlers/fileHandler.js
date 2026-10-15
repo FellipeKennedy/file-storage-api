@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
+import { fileTypeFromBuffer } from 'file-type'
 
-const fileHandler = (request)=>{
+const fileHandler = async (request)=>{
   let id = null
   let user_name = null
   let user_id = null
@@ -11,11 +12,13 @@ const fileHandler = (request)=>{
   let fileInfsObject = {}
 
   try {
+    let mime_detect = await fileTypeFromBuffer(request.body)
+
     id = randomUUID()
     user_name = request.get("x-user-name")
     user_id = request.get("x-user-id")
     file_name = request.get("x-file-name")
-    mime_type = request.get("content-type")
+    mime_type = mime_detect.mime
     size = request.get("content-length")
     path = `/cloud/${user_name}/${file_name}`
 
@@ -29,7 +32,7 @@ const fileHandler = (request)=>{
       path: path
     }
   } catch (err){
-    throw err
+    console.log(err)
   }
 }
 

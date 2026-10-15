@@ -7,16 +7,18 @@ import fileHandler from '../handlers/fileHandler.js'
 const router = Router()
 
 router.post("/files", async (req, res) => {
-  const infsToRegister = fileHandler(req)
-  const userName = infsToRegister.user_name
-  const fileName = infsToRegister.file_name
+  const infsToRegister = await fileHandler(req)
+  const { user_name, ...fileInfs} = infsToRegister
+  const userName = user_name
+  const fileName = fileInfs.file_name
   await mkdir(`./cloud/${userName}/`, { recursive: true })
   const WriteFileStream = createWriteStream(`./cloud/${userName}/${fileName}`)
   
   req.pipe(WriteFileStream)
 
+
   WriteFileStream.on("finish", async ()=>{
-    await db.query("INSERT INTO files(id, user_id, file_name, mime_type, size, path) VALUES ($1, $2, $3, $4, $5, $6)", Object.values(infsToRegister))
+    await db.query("INSERT INTO files(id, user_id, file_name, mime_type, size, path) VALUES ($1, $2, $3, $4, $5, $6)", Object.values(fileInfs))
     return res.json({
       msg: "File successfully received!",
       status: "success"
